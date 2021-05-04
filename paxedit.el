@@ -2066,13 +2066,13 @@ swap with. Swaps in the opposite direction of
 
 ;;; Associating Major Mode with Implicit SEXP
 
-(defun paxedit--associate-major-mode-to-implicit-sexp ()
+(defun paxedit--associate-derived-mode-to-implicit-sexp ()
   "Associate major mode with certain implicit functions and structures."
-  (paxedit-awhen (cl-rest (assq major-mode paxedit-assoc))
+  (paxedit-awhen (cl-rest (cl-assoc-if 'derived-mode-p paxedit-assoc))
     (setf paxedit-sexp-implicit-functions (eval (cl-first it))
           paxedit-sexp-implicit-structures (eval (cl-second it)))
     (mapc (lambda (function-association) (set (cl-first function-association)
-                                              (cl-rest function-association)))
+                                         (cl-rest function-association)))
           (cl-third it))))
 
 ;;; Setting Up Minor Mode
@@ -2188,7 +2188,7 @@ left of the cursor."
   :lighter " Paxedit"
   :keymap (make-sparse-keymap)
   :group paxedit
-  (paxedit--associate-major-mode-to-implicit-sexp))
+  (paxedit--associate-derived-mode-to-implicit-sexp))
 
 (provide 'paxedit)
 ;;; paxedit.el ends here
